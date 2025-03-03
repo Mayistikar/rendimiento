@@ -3,9 +3,11 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/ai_model_classifier/.venv" />
+      <excludeFolder url="file://$MODULE_DIR$/ai_model_classifier/venv" />
       <excludeFolder url="file://$MODULE_DIR$/tokenizer/venv" />
+      <excludeFolder url="file://$MODULE_DIR$/tokenizer_command/venv" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.10 (rendimiento)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="tokenizer_command" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

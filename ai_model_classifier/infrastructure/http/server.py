@@ -1,4 +1,3 @@
-# infrastructure/http/server.py
 from fastapi import FastAPI
 import uvicorn
 from typing import List

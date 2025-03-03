@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 
 @dataclass
-class RawData:
+class MedicalRecord:
     image: str
     diagnosis: str
     report: str
@@ -27,3 +27,5 @@ class RawData:
     unknown: str
     code: str
     diagnosis_date: datetime
+
+

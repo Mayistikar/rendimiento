@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from application.RawDataService import IRawDataService
-from domain.RawData import RawData
+from ai_model_classifier.application.service_raw_data import IRawDataService
+from ai_model_classifier.domain.model_raw_data import RawData
 from datetime import datetime
 
 class Routes:
