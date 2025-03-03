@@ -1,19 +1,20 @@
 from tokenizer_command.infrastructure.pulsar.consumer import Consumer, Config
+from tokenizer_command.infrastructure.pulsar.adapter_tokenizer_query import TokenizerAdapterQuery
 from tokenizer_command.application.service_tokenizer_cmd import TokenizerCmdService
 from tokenizer_command.infrastructure.db.adapter_tokenizer_repo_mysql import TokenizerRepository
+import pulsar
 
 if __name__ == '__main__':
-        '''
         tokenizer_query_config = Config(
             service_url='pulsar://localhost:6650',
             topic='tokenizer_query',
             subscription='tokenizer_query'
         )
-        tokenizer_query_adapter = TokenizerAdapterQuery(tokenizer_query_config)
-        '''
-
+        pulsar_client = pulsar.Client(tokenizer_query_config.service_url)
+        tokenizer_query_adapter = TokenizerAdapterQuery(pulsar_client)
         tokenizer_repository = TokenizerRepository()
-        tokenizer_service = TokenizerCmdService(tokenizer_repository)
+        tokenizer_service = TokenizerCmdService(tokenizer_repository, tokenizer_query_adapter)
+
         tokenizer_cmd_config = Config(
             service_url='pulsar://localhost:6650',
             topic='tokenizer_command',
