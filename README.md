@@ -1,6 +1,6 @@
 # Sistema de Clasificación y Tokenización de Datos
 
-Este proyecto implementa un sistema de microservicios para la clasificación de modelos de IA y la tokenización de datos médicos. La solución está diseñada siguiendo los principios de **Domain-Driven Design (DDD)** y **Arquitectura Hexagonal (Ports and Adapters)**, garantizando escalabilidad y mantenibilidad.
+Este proyecto implementa un sistema de microservicios para la clasificación de modelos de IA y la tokenización de datos médicos. La solución está diseñada siguiendo los principios de **# Domain-Driven Design (DDD)** y **Arquitectura Hexagonal (Ports and Adapters)**, garantizando escalabilidad y mantenibilidad.
 
 ## Características principales
 
@@ -104,50 +104,74 @@ rendimiento/
 
 ## Arquitectura del Sistema
 
-### 1. Domain-Driven Design (DDD)
+### CQRS y Event Sourcing
+
+Este sistema implementa **CQRS (Command Query Responsibility Segregation)** para separar claramente las operaciones de escritura y lectura, mejorando la escalabilidad y el rendimiento. Se tienen dos microservicios especializados para esta separación:
+
+- **`tokenizer_command`**: Responsable de procesar y tokenizar los datos médicos, manejando las operaciones de escritura.
+- **`tokenizer_query`**: Encargado de gestionar las consultas a los datos tokenizados, optimizando las operaciones de lectura.
+
+Además, se utiliza **Event Sourcing** para almacenar el historial de eventos en Apache Pulsar, asegurando la trazabilidad de los cambios en los datos médicos tokenizados.
+
+### Topología de Bases de Datos
+
+El sistema se ha planteado de forma descentralizada, donde cada microservicio cuenta con su propia base de datos para mejorar el rendimiento y la escalabilidad:
+
+- **`db_command`**: Base de datos utilizada para almacenar datos en proceso de tokenización. Pertenece al microservicio **`tokenizer_command`**.
+- **`db_query`**: Base de datos optimizada para la consulta de datos tokenizados. Pertenece al microservicio **`tokenizer_query`**.
+
+Cada microservicio accede exclusivamente a su base de datos correspondiente según su responsabilidad dentro del patrón CQRS, asegurando una mejor distribución de carga y evitando bloqueos innecesarios.
+
+
+
+### Domain-Driven Design (DDD)
 
 - **Modelo de Dominio:**
+
   - Representa datos médicos y sus transformaciones mediante DTOs como `MedicalRecordDTO`.
 
 - **Casos de Uso:**
+
   - La lógica de negocio se encapsula en `TokenizerCmdService`, implementando `ITokenizerCmdService`.
 
 - **Separación de infraestructura:**
+
   - Se definen interfaces como `ITokenizerRepository` y `ITokenizerQueryPort`, permitiendo desacoplar la persistencia del dominio.
 
-### 2. Arquitectura Hexagonal (Ports and Adapters)
+### Arquitectura Hexagonal (Ports and Adapters)
 
 - **Puertos y Adaptadores:**
+
   - La lógica central se comunica a través de puertos (interfaces) con adaptadores de entrada y salida.
 
 - **Adaptadores de Entrada:**
+
   - `tokenizer_command` y `ai_model_classifier` procesan peticiones y las dirigen a los casos de uso.
 
 - **Adaptadores de Salida:**
+
   - Persistencia en MySQL y mensajería con Apache Pulsar.
 
 ## Ejecución y Comunicación entre Microservicios
 
 1. **Servicio de Clasificación de Modelos:**
+
    - Ejecutar `python main.py` en `ai_model_classifier/`.
 
 2. **Servicio de Tokenización (Command):**
+
    - Consume mensajes de Apache Pulsar, los procesa y tokeniza los datos médicos.
 
 3. **Servicio de Consulta:**
+
    - Gestiona peticiones sobre datos tokenizados almacenados en `db_query`.
 
 4. **Bases de Datos:**
+
    - `db_command`: Almacena datos en proceso de tokenización.
    - `db_query`: Almacena datos tokenizados listos para consulta.
 
 ## Notas Adicionales
 
-- Asegúrate de tener Docker instalado en tu sistema.
-- Configura las variables de entorno en `docker-compose.yml`.
-- Para cambiar configuraciones de bases de datos o Apache Pulsar, edita los archivos correspondientes en cada microservicio.
-
----
-
-Este README proporciona una visión clara de la estructura del proyecto, su ejecución y la filosofía de diseño utilizada.
-
+- Se requiere tener Docker instalado en tu sistema.
+- Configurar las variables de entorno en `docker-compose.yml`.
