@@ -20,7 +20,7 @@ class TokenizerCmdService(ITokenizerCmdService):
         print("medical report: ", medical_report)
 
         # se implementa una pausa de 5 segundos para simular el tiempo     de procesamiento
-        # time.sleep(5)
+        time.sleep(5)
         self.repo.insert_record(medical_report)
         print("emitting event...")
         self.query_port.query_event_emit(medical_report)
