@@ -6,9 +6,9 @@ from tokenizer_query.infrastructure.http.server import ServerHTTP
 import threading
 import time
 
+tokenizer_repository = TokenizerRepository()
 
 def run_consumer():
-    tokenizer_repository = TokenizerRepository()
     tokenizer_service = TokenizerQueryService(tokenizer_repository)
     tokenizer_query_config = Config(
         service_url='pulsar://localhost:6650',
@@ -20,8 +20,7 @@ def run_consumer():
 
 
 def run_fastapi_server():
-    repository = TokenizerRepository()
-    server = ServerHTTP(repository)
+    server = ServerHTTP(tokenizer_repository)
     server.run(host="0.0.0.0", port=8001)
 
 

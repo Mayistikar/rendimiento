@@ -14,8 +14,11 @@ class ServerHTTP:
         # Add default routes
         @self.app.get("/data")
         async def root():
-            data = self.repo.get_all_records()
-            return {"data": data}
+            try:
+                data = self.repo.get_all_records()
+                return {"data": data}
+            except Exception as e:
+                return {"error": str(e)}
 
         @self.app.get("/health")
         async def health_check():
